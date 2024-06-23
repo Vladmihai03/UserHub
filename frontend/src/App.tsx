@@ -1,7 +1,6 @@
 // src/App.tsx
 import React, { useState } from 'react';
 import api from './api';
-import UserList from './UserList';
 import { Link } from 'react-router-dom';
 
 const App: React.FC = () => {
@@ -19,6 +18,17 @@ const App: React.FC = () => {
     }
   };
 
+
+  const handleDeleteButton = async () => {
+    const email = "prostu@gmail.com";
+    try {
+      const response = await api.delete('/delete-user', { params: { email } });
+      console.log(response.data); // The actual data is available under the `data` property
+    } catch (error) {
+      console.error("There was an error", error);
+    }
+  };
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="App bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
@@ -57,6 +67,11 @@ const App: React.FC = () => {
           <button className='w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-800  shadow-md mt-5'>
             Users
           </button>
+        </Link>
+        <Link to="/delete">
+            <button className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-800 mt-5">
+               Delete User
+            </button>
         </Link>
       </div>
     </div>

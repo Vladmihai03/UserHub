@@ -27,6 +27,29 @@ app.post('/api/add-user', async (req: Request, res: Response) => {
   }
 });
 
+app.delete('/api/delete-user', async (req: Request, res: Response) => {
+  const email = req.query.email as string;
+  if (!email) {
+    return res.status(400).json({ "message": "Please provide a valid email" });
+  }
+
+  try {
+    const result = await pool.query('DELETE FROM users WHERE email = $1', [email]);
+    const rowCount = result.rowCount as number; // Assert rowCount as number
+    if (rowCount > 0) {
+      return res.status(200).json({ "message": "User deleted successfully" });
+    } else {
+      return res.status(404).json({ "message": `${email} not found in database` });
+    }
+  } catch (err) {
+    const error = err as Error;
+    console.error(error.message);
+    return res.status(500).json({ "message": "Server Error" });
+  }
+});
+
+
+
 app.get('/api/users', async (req: Request, res: Response) => {
   try {
     const allUsers = await pool.query('SELECT * FROM users');
