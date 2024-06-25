@@ -8,21 +8,23 @@ const App: React.FC = () => {
   const [email, setEmail] = useState('');
   const [salary, setSalary] = useState('');
   const [func, SetFunc] = useState('');
+  const [gender, setGender] = useState('');
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const response = await api.post('/add-user', { name, email, salary, func });
+      const response = await api.post('/add-user', { name, email, salary, func, gender });
       console.log('User added:', response.data);
-      setName('');  // Golește câmpul de nume
-      setEmail(''); // Golește câmpul de email
+      setName('');
+      setEmail('');
       setSalary('');
       SetFunc('');
+      setGender('');
     } catch (error) {
       console.error('There was an error adding the user!', error);
     }
   };
 
-  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="App bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
@@ -69,6 +71,31 @@ const App: React.FC = () => {
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter your function"
             />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium">Gender:</label>
+            <div className="flex items-center">
+              <label className="mr-4">
+                <input 
+                  type="radio" 
+                  value="female" 
+                  checked={gender === 'female'} 
+                  onChange={(e) => setGender(e.target.value)} 
+                  className="mr-1"
+                />
+                Female
+              </label>
+              <label>
+                <input 
+                  type="radio" 
+                  value="male" 
+                  checked={gender === 'male'} 
+                  onChange={(e) => setGender(e.target.value)} 
+                  className="mr-1"
+                />
+                Male
+              </label>
+            </div>
           </div>
           <button 
             type="submit" 

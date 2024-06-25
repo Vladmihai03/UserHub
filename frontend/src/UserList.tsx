@@ -7,7 +7,8 @@ interface User {
   name: string;
   email: string;
   salary: number;
-  func: string
+  func: string;
+  gender: 'female' | 'male';
 }
 
 const UserList: React.FC = () => {
@@ -52,7 +53,11 @@ const UserList: React.FC = () => {
               {users.map((user, index) => (
                 <tr key={user.id} className="hover:bg-gray-100 transition duration-300">
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <Link to={`/user/${user.id}`}>
+                      {user.name}
+                    </Link>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.salary}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.func}</td>
