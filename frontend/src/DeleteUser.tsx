@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from './api'; // Ensure this imports your configured Axios instance
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DeleteUser: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,6 +23,7 @@ const DeleteUser: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      
       <div className="bg-cyan-50 p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4 text-center">Delete User</h1>
         <form onSubmit={handleDeleteButton} className="space-y-5">
@@ -42,6 +44,10 @@ const DeleteUser: React.FC = () => {
           >
             Delete User
           </button>
+          <Link to="/">
+            <button className="w-full bg-blue-500 text-white mt-3 p-2 rounded hover:bg-blue-800">Homepage</button>
+          </Link>
+      
         </form>
       </div>
     </div>

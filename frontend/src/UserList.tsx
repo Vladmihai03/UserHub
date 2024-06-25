@@ -6,6 +6,8 @@ interface User {
   id: number;
   name: string;
   email: string;
+  salary: number;
+  func: string
 }
 
 const UserList: React.FC = () => {
@@ -39,17 +41,21 @@ const UserList: React.FC = () => {
           <table className="w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Count</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Salary</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Function</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {users.map((user) => (
+              {users.map((user, index) => (
                 <tr key={user.id} className="hover:bg-gray-100 transition duration-300">
-                  <td className="px-6 py-4 whitespace-nowrap">{user.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.salary}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.func}</td>
                 </tr>
               ))}
             </tbody>

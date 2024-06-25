@@ -6,28 +6,22 @@ import { Link } from 'react-router-dom';
 const App: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [salary, setSalary] = useState('');
+  const [func, SetFunc] = useState('');
 
   const handleSubmit = async () => {
     try {
-      const response = await api.post('/add-user', { name, email });
+      const response = await api.post('/add-user', { name, email, salary, func });
       console.log('User added:', response.data);
       setName('');  // Golește câmpul de nume
       setEmail(''); // Golește câmpul de email
+      setSalary('');
+      SetFunc('');
     } catch (error) {
       console.error('There was an error adding the user!', error);
     }
   };
 
-
-  const handleDeleteButton = async () => {
-    const email = "prostu@gmail.com";
-    try {
-      const response = await api.delete('/delete-user', { params: { email } });
-      console.log(response.data); // The actual data is available under the `data` property
-    } catch (error) {
-      console.error("There was an error", error);
-    }
-  };
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -54,6 +48,26 @@ const App: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)} 
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter your email"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium">Salary:</label>
+            <input 
+              type="text" 
+              value={salary} 
+              onChange={(e) => setSalary(e.target.value)} 
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Enter your salary"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium">Function:</label>
+            <input 
+              type="text" 
+              value={func} 
+              onChange={(e) => SetFunc(e.target.value)} 
+              className="w-full p-2 border border-gray-300 rounded"
+              placeholder="Enter your function"
             />
           </div>
           <button 

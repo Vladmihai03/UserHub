@@ -13,11 +13,11 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/api/add-user', async (req: Request, res: Response) => {
-  const { name, email } = req.body;
+  const { name, email, salary, func } = req.body;
   try {
     const newUser = await pool.query(
-      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
-      [name, email]
+      'INSERT INTO users (name, email, salary, func) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, email, salary, func]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
