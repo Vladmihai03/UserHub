@@ -12,7 +12,10 @@ export const addUser = async (req: Request, res: Response) => {
     );
 
     const user = newUser.rows[0];
-    const token = createJWT({ id: user.id, email: user.email });
+    const token = createJWT({
+      id: user.id, email: user.email,
+      func: ''
+    });
     res.json({ user, token });
   } catch (err) {
     console.error((err as Error).message);
@@ -37,18 +40,31 @@ export const signIn = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    const token = createJWT({ id: user.id, email: user.email });
-    res.json({ token });
+    const token = createJWT({ id: user.id, email: user.email, func: user.func });
+    res.json({ token, user });
   } catch (err) {
     console.error((err as Error).message);
     res.status(500).send('Server Error');
   }
 };
 
+
 export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { email } = req.query;
+  
+  if (!email) {
+    return res.status(400).json({ message: 'Please provide a valid email' });
+  }
+
   try {
-    await pool.query('DELETE FROM users WHERE id = $1', [id]);
+    const result = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const userId = result.rows[0].id;
+
+    await pool.query('DELETE FROM users WHERE id = $1', [userId]);
     res.status(200).json({ message: 'User deleted' });
   } catch (err) {
     console.error((err as Error).message);
@@ -58,7 +74,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const allUsers = await pool.query('SELECT * FROM users');
+    const allUsers = await pool.query(`SELECT id, name, email, salary, func, gender FROM users WHERE func != 'admin';`);
     res.json(allUsers.rows);
   } catch (err) {
     console.error((err as Error).message);
