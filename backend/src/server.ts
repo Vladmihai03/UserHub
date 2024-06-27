@@ -2,7 +2,10 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { protect, verifyUser, isAdmin } from './auth';
-import { addUser, deleteUser, getAllUsers, getUserById, signIn } from './handlers';
+import { addUser, deleteUsersByEmail, getAllUsers, getUserById, signIn } from './handlers';
+import { deleteAllUsersExceptOne } from './handlers';
+
+
 
 dotenv.config();
 
@@ -19,8 +22,10 @@ app.post('/api/register', addUser);
 app.post('/api/signin', signIn);
 
 // Protect the following routes with the protect middleware
-app.delete('/api/delete-user', protect, isAdmin, deleteUser);
+app.delete('/api/delete-all-users', protect, isAdmin, deleteAllUsersExceptOne);
+app.delete('/api/delete-users', protect, isAdmin, deleteUsersByEmail);
 app.get('/api/users', protect, isAdmin, getAllUsers);
 app.get('/api/users/:id', protect, verifyUser, getUserById);
+
 
 export default app;

@@ -48,29 +48,35 @@ export const signIn = async (req: Request, res: Response) => {
   }
 };
 
-
-export const deleteUser = async (req: Request, res: Response) => {
-  const { email } = req.query;
-  
-  if (!email) {
-    return res.status(400).json({ message: 'Please provide a valid email' });
-  }
-
+export const deleteAllUsersExceptOne = async (req: Request, res: Response) => {
   try {
-    const result = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const userId = result.rows[0].id;
-
-    await pool.query('DELETE FROM users WHERE id = $1', [userId]);
-    res.status(200).json({ message: 'User deleted' });
+    const deleteQuery = 'DELETE FROM users WHERE id != $1';
+    await pool.query(deleteQuery, [34]);
+    res.status(200).json({ message: 'All users except one deleted' });
   } catch (err) {
     console.error((err as Error).message);
     res.status(500).send('Server Error');
   }
 };
+
+
+export const deleteUsersByEmail = async (req: Request, res: Response) => {
+  const { emails } = req.body;
+
+  if (!emails || !Array.isArray(emails) || emails.length === 0) {
+    return res.status(400).json({ message: 'Please provide a valid array of user emails' });
+  }
+
+  try {
+    const deleteQuery = 'DELETE FROM users WHERE email = ANY($1::text[])';
+    await pool.query(deleteQuery, [emails]);
+    res.status(200).json({ message: 'Users deleted' });
+  } catch (err) {
+    console.error((err as Error).message);
+    res.status(500).send('Server Error');
+  }
+};
+
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {

@@ -42,3 +42,28 @@ frontend/build/
 # Backend
 backend/node_modules/
 backend/dist/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+*.env
+*.venv
+pip-log.txt
+pip-delete-this-directory.txt
+htmlcov/
+.tox/
+.coverage
+.cache
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+pytestdebug.log
+.ipynb_checkpoints/
+celerybeat-schedule

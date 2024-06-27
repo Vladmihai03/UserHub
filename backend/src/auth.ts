@@ -55,7 +55,7 @@ export const protect = (req: AuthenticatedRequest, res: Response, next: NextFunc
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string; email: string };
-    console.log("Token verified, user:", user); // Log pentru debugging
+    //console.log("Token verified, user:", user); // Log pentru debugging
     req.user = user;
     next();
   } catch (e) {
