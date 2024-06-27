@@ -48,6 +48,18 @@ export const signIn = async (req: Request, res: Response) => {
   }
 };
 
+export const getUsersByFunction = async (req: Request, res: Response) => {
+  const { func } = req.query;
+  
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE func = $1', [func]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+};
+
 export const deleteAllUsersExceptOne = async (req: Request, res: Response) => {
   try {
     const deleteQuery = 'DELETE FROM users WHERE id != $1';

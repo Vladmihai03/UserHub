@@ -14,6 +14,8 @@ interface User {
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
+  const [functions, setFunctions] = useState<string[]>([]);
+  const [selectedFunction, setSelectedFunction] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,8 +28,12 @@ const UserList: React.FC = () => {
           }
         };
 
-        const response = await api.get('/users', config);
+        const response = await api.get<User[]>('/users', config);
         setUsers(response.data);
+
+        // Extract unique functions from users
+        const uniqueFunctions = Array.from(new Set(response.data.map((user: User) => user.func)));
+        setFunctions(uniqueFunctions);
       } catch (error) {
         console.error('There was an error fetching the users!', error);
       }
@@ -54,7 +60,7 @@ const UserList: React.FC = () => {
         data: { emails: selectedEmails }
       };
 
-      const response = await api.delete('/delete-users', config);
+      const response = await api.delete<{ message: string }>('/delete-users', config);
       console.log(response.data);
       alert(response.data.message);
 
@@ -77,7 +83,7 @@ const UserList: React.FC = () => {
         }
       };
 
-      const response = await api.delete('/delete-all-users', config);
+      const response = await api.delete<{ message: string }>('/delete-all-users', config);
       console.log(response.data);
       alert(response.data.message);
 
@@ -85,6 +91,26 @@ const UserList: React.FC = () => {
     } catch (error) {
       console.error('There was an error deleting all users!', error);
       alert('There was an error deleting all users');
+    }
+  };
+
+  const handleFunctionChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedFunc = event.target.value;
+    setSelectedFunction(selectedFunc);
+
+    try {
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        params: { func: selectedFunc }
+      };
+
+      const response = await api.get<User[]>('/users-by-function', config);
+      setUsers(response.data);
+    } catch (error) {
+      console.error('There was an error fetching the users by function!', error);
     }
   };
 
@@ -112,6 +138,20 @@ const UserList: React.FC = () => {
             </button>
           </div>
         )}
+      </div>
+      <div className="w-full max-w-4xl mb-4">
+        <select
+          className="w-full p-2 border border-gray-300 rounded"
+          value={selectedFunction}
+          onChange={handleFunctionChange}
+        >
+          <option value="">All Functions</option>
+          {functions.map((func) => (
+            <option key={func} value={func}>
+              {func}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-4 text-center">Users Database</h2>
